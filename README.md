@@ -2,18 +2,18 @@
 
 ## Overview
 
-Trade Finance Intelligence Platform is a multimodal AI system for processing and understanding trade-finance documents.
+Trade Finance Intelligence Platform is a multimodal AI solution for understanding and processing trade-finance documents.
 
 The platform combines:
 
-* OCR (Optical Character Recognition)
-* Layout-aware document understanding
-* LayoutLMv3 multimodal classification
-* Entity extraction
-* Semantic search (RAG)
-* FastAPI deployment
+* OCR (Tesseract)
+* Layout-aware Document Understanding
+* LayoutLMv3 Multimodal Classification
+* Entity Extraction
+* Semantic Search (RAG)
+* FastAPI Deployment
 
-The system processes common trade-finance documents including:
+The system supports common trade-finance documents:
 
 * Commercial Invoices
 * Bills of Lading
@@ -22,47 +22,107 @@ The system processes common trade-finance documents including:
 
 ---
 
-## Architecture
+# Architecture
 
 ```text
+Trade Finance Documents
+        |
+        v
 PDF Documents
-      |
-      v
+        |
+        v
 Document Images
-      |
-      v
-OCR Extraction (Tesseract)
-      |
-      +------------------+
-      |                  |
-      v                  v
-Layout JSON         OCR Text
-(Bounding Boxes)    (Content)
-      |                  |
-      +--------+---------+
-               |
-               v
-       LayoutLMv3
- Document Classification
-               |
-               v
-      Entity Extraction
-               |
-               v
-         ChromaDB
-      Semantic Search
-               |
-               v
-          FastAPI
+        |
+        v
+OCR Extraction
+(Tesseract)
+        |
+        +---------------------+
+        |                     |
+        v                     v
+OCR Text                Layout JSON
+                     (Bounding Boxes)
+        |                     |
+        +----------+----------+
+                   |
+                   v
+             LayoutLMv3
+        Document Classification
+                   |
+                   v
+          Entity Extraction
+                   |
+                   v
+      ChromaDB Semantic Search
+                   |
+                   v
+              FastAPI
 ```
 
 ---
 
-## Dataset
+# Demo Screenshots
+
+## FastAPI Swagger Interface
+
+![Swagger UI](docs/images/swagger_ui.png)
+
+---
+
+## LayoutLMv3 Classification + Entity Extraction
+
+![Classification](docs/images/classification_demo.png)
+
+Example Response:
+
+```json
+{
+  "classification": {
+    "doc_type": "commercial_invoice",
+    "confidence": 0.9998
+  },
+  "entities": {
+    "seller": "ABC Trading Ltd",
+    "buyer": "XYZ Imports LLC",
+    "amount": "1250000",
+    "country": "Singapore",
+    "goods": "Medical Devices"
+  }
+}
+```
+
+---
+
+## Semantic Search (RAG)
+
+![Semantic Search](docs/images/semantic_search_demo.png)
+
+Example Query:
+
+```json
+{
+  "query": "Find pharmaceutical supply invoices",
+  "n_results": 5
+}
+```
+
+---
+
+## LayoutLMv3 Training Results
+
+![Training](docs/images/layoutlmv3_training.png)
+
+Results:
+
+```text
+Accuracy: 1.00
+```
+
+---
+
+# Dataset
 
 Synthetic trade-finance dataset generated using Python.
-
-Document Types:
 
 | Document Type      | Count |
 | ------------------ | ----- |
@@ -88,44 +148,42 @@ Generated Assets:
 
 ---
 
-## Features
+# Document Classification
 
-### Document Classification
-
-Model:
+### Model
 
 ```text
-LayoutLMv3
+microsoft/layoutlmv3-base
 ```
 
-Input:
+### Inputs
 
-* Document image
-* OCR text
-* Bounding boxes
+* Document Image
+* OCR Tokens
+* Bounding Boxes
 
-Output:
+### Output
 
 ```json
 {
-  "doc_type": "commercial_invoice",
-  "confidence": 0.9958
+  "doc_type": "letter_of_credit",
+  "confidence": 0.9984
 }
 ```
 
 ---
 
-### Entity Extraction
+# Entity Extraction
 
-Extracted fields include:
+Extracted Fields:
 
 ```text
 Seller
 Buyer
+Invoice Number
 Amount
 Country
 Goods
-Invoice Number
 LC Number
 Container Number
 Port of Loading
@@ -146,12 +204,13 @@ Example:
 
 ---
 
-### Semantic Search (RAG)
+# Semantic Search (RAG)
 
-Technology:
+Technology Stack:
 
 ```text
 Sentence Transformers
+all-MiniLM-L6-v2
 ChromaDB
 ```
 
@@ -163,13 +222,17 @@ Find pharmaceutical supply invoices
 Find letters of credit issued by HSBC
 
 Find documents involving Germany
+
+Find shipments from Singapore
+
+Find bills of lading containing industrial pumps
 ```
 
 ---
 
-## Model Results
+# Model Performance
 
-### Baseline Model
+## Baseline
 
 TF-IDF + Logistic Regression
 
@@ -177,7 +240,9 @@ TF-IDF + Logistic Regression
 | -------- | ----- |
 | Accuracy | 1.00  |
 
-### Multimodal Model
+---
+
+## Multimodal
 
 LayoutLMv3
 
@@ -185,23 +250,26 @@ LayoutLMv3
 | -------- | ----- |
 | Accuracy | 1.00  |
 
-Dataset:
+Training Configuration:
 
 ```text
-400 synthetic documents
+3 Epochs
+GPU: NVIDIA RTX 5000 Ada Generation
 ```
 
 ---
 
-## API Endpoints
+# API Endpoints
 
-### Health Check
+## Health Check
 
 ```http
 GET /
 ```
 
-### Process Document
+---
+
+## Process Document
 
 ```http
 POST /process
@@ -217,7 +285,9 @@ Request:
 }
 ```
 
-### Semantic Search
+---
+
+## Semantic Search
 
 ```http
 POST /search
@@ -234,10 +304,10 @@ Request:
 
 ---
 
-## Installation
+# Installation
 
 ```bash
-git clone <repo>
+git clone https://github.com/Deepak-Sathyanarayanan/trade-finance-intelligence.git
 
 cd trade-finance-intelligence
 
@@ -250,7 +320,7 @@ pip install -r requirements.txt
 
 ---
 
-## Run API
+# Run API
 
 ```bash
 uvicorn src.api.main:app --reload
@@ -264,7 +334,7 @@ http://localhost:8000/docs
 
 ---
 
-## Technology Stack
+# Technology Stack
 
 * Python
 * WSL2
@@ -279,12 +349,20 @@ http://localhost:8000/docs
 
 ---
 
-## Future Enhancements
+# Future Enhancements
 
-* Named Entity Recognition using LayoutLMv3 Token Classification
-* PDF Upload Endpoint
-* LLM-based Document Summarization
+* LayoutLMv3 Token Classification for NER
+* LLM-based Compliance Summaries
+* Ollama / Llama3 Integration
 * Docker Deployment
 * Kubernetes Deployment
 * AWS SageMaker Training
 * AWS EKS Inference
+
+---
+
+# Author
+
+Deepak Sathyanarayanan
+
+Trade Finance • Document AI • Multimodal ML • Generative AI

@@ -2,7 +2,7 @@
 
 ## Overview
 
-Trade Finance Intelligence Platform is a multimodal AI system for understanding, classifying, extracting, and searching trade-finance documents.
+Trade Finance Intelligence Platform is a multimodal AI solution for understanding, classifying, extracting, and searching trade-finance documents.
 
 The platform combines:
 
@@ -13,7 +13,7 @@ The platform combines:
 * Semantic Search (RAG)
 * FastAPI Deployment
 
-The system processes common trade-finance documents such as:
+The system processes common trade-finance documents including:
 
 * Commercial Invoices
 * Bills of Lading
@@ -24,40 +24,9 @@ The system processes common trade-finance documents such as:
 
 # Architecture
 
-```text
-Trade Finance Documents
-        |
-        v
-PDF Documents
-        |
-        v
-Document Images
-        |
-        v
-OCR Extraction
-(Tesseract)
-        |
-        +---------------------+
-        |                     |
-        v                     v
-OCR Text                Layout JSON
-                     (Bounding Boxes)
-        |                     |
-        +----------+----------+
-                   |
-                   v
-             LayoutLMv3
-        Document Classification
-                   |
-                   v
-          Entity Extraction
-                   |
-                   v
-      ChromaDB Semantic Search
-                   |
-                   v
-              FastAPI
-```
+![Architecture](docs/images/architecture.png)
+
+The platform processes trade-finance documents through OCR, layout extraction, multimodal classification using LayoutLMv3, entity extraction, semantic retrieval using ChromaDB, and FastAPI-based inference services.
 
 ---
 
@@ -66,6 +35,8 @@ OCR Text                Layout JSON
 ## FastAPI Swagger Interface
 
 ![Swagger UI](docs/images/swagger_ui.png)
+
+Interactive API documentation exposed through FastAPI and Swagger UI.
 
 ---
 
@@ -118,7 +89,7 @@ Example semantic search query:
 Find pharmaceutical supply invoices
 ```
 
-Example retrieval result:
+Example retrieval output:
 
 ```text
 Rank 1
@@ -137,7 +108,7 @@ The system generates dense embeddings using Sentence Transformers and performs s
 
 # Dataset
 
-Synthetic trade-finance dataset generated using Python.
+A synthetic trade-finance dataset was generated to simulate realistic banking and trade documentation workflows.
 
 | Document Type      | Count |
 | ------------------ | ----- |
@@ -146,7 +117,7 @@ Synthetic trade-finance dataset generated using Python.
 | Letter of Credit   | 100   |
 | Packing List       | 100   |
 
-Total Documents:
+### Total Documents
 
 ```text
 400
@@ -155,10 +126,10 @@ Total Documents:
 Generated Assets:
 
 ```text
-400 PDFs
+400 PDF Documents
 400 Images
-400 OCR Files
-400 Layout Files
+400 OCR Text Files
+400 Layout JSON Files
 ```
 
 ---
@@ -171,13 +142,15 @@ Generated Assets:
 microsoft/layoutlmv3-base
 ```
 
-## Input Modalities
+Fine-tuned for trade-finance document classification.
 
-* Document Images
+### Input Modalities
+
+* Document Image
 * OCR Tokens
 * Bounding Boxes
 
-## Output
+### Output
 
 ```json
 {
@@ -190,7 +163,9 @@ microsoft/layoutlmv3-base
 
 # Entity Extraction
 
-The platform extracts key trade-finance fields including:
+The platform extracts important business entities from trade-finance documents.
+
+### Supported Fields
 
 * Seller
 * Buyer
@@ -219,13 +194,19 @@ Example:
 
 # Semantic Search (RAG)
 
-## Technology Stack
+## Embedding Model
 
-* Sentence Transformers
-* all-MiniLM-L6-v2
-* ChromaDB
+```text
+sentence-transformers/all-MiniLM-L6-v2
+```
 
-## Example Queries
+## Vector Database
+
+```text
+ChromaDB
+```
+
+### Example Queries
 
 ```text
 Find pharmaceutical supply invoices
@@ -237,6 +218,18 @@ Find documents involving Germany
 Find shipments from Singapore
 
 Find bills of lading containing industrial pumps
+```
+
+### Workflow
+
+```text
+OCR Text
+    ↓
+Sentence Transformer Embeddings
+    ↓
+ChromaDB Vector Store
+    ↓
+Semantic Retrieval
 ```
 
 ---
@@ -276,6 +269,14 @@ GPU: NVIDIA RTX 5000 Ada Generation
 
 ```http
 GET /
+```
+
+Response:
+
+```json
+{
+  "status": "ok"
+}
 ```
 
 ---
@@ -329,6 +330,19 @@ Request:
 }
 ```
 
+Response:
+
+```json
+{
+  "results": [
+    {
+      "doc_id": "...",
+      "doc_type": "commercial_invoice"
+    }
+  ]
+}
+```
+
 ---
 
 # Repository Structure
@@ -338,6 +352,11 @@ trade-finance-intelligence/
 │
 ├── docs/
 │   └── images/
+│       ├── architecture.png
+│       ├── swagger_ui.png
+│       ├── classification_demo.png
+│       ├── semantic_search_demo.png
+│       └── RAG_Terminal_Output.png
 │
 ├── reports/
 │
@@ -353,15 +372,19 @@ trade-finance-intelligence/
 └── README.md
 ```
 
+---
+
+# Repository Notes
+
 The repository contains source code only.
 
-The following artifacts are intentionally excluded from source control because of size constraints:
+The following artifacts are excluded from source control because of size constraints:
 
 * Synthetic trade-finance dataset
 * OCR outputs
 * Layout JSON files
 * Trained LayoutLMv3 models
-* ChromaDB vector indexes
+* ChromaDB indexes
 
 All artifacts can be regenerated using the provided scripts.
 
@@ -399,16 +422,35 @@ http://localhost:8000/docs
 
 # Technology Stack
 
-* Python
-* WSL2
+### Machine Learning
+
 * PyTorch
 * Hugging Face Transformers
 * LayoutLMv3
-* Tesseract OCR
-* ChromaDB
 * Sentence Transformers
+
+### OCR & Document AI
+
+* Tesseract OCR
+* Bounding Box Extraction
+* Layout-aware Processing
+
+### Retrieval
+
+* ChromaDB
+* Vector Search
+* RAG
+
+### Backend
+
 * FastAPI
 * Uvicorn
+
+### Development Environment
+
+* Python 3.12
+* Ubuntu 24.04 (WSL2)
+* NVIDIA RTX 5000 Ada Generation
 
 ---
 
@@ -421,6 +463,7 @@ http://localhost:8000/docs
 * Kubernetes Deployment
 * AWS SageMaker Training
 * AWS EKS Inference
+* Human-in-the-loop Validation Workflow
 
 ---
 
@@ -428,4 +471,4 @@ http://localhost:8000/docs
 
 **Deepak Sathyanarayanan**
 
-Document AI • Multimodal AI • Trade Finance • Generative AI
+Document AI • Trade Finance • Multimodal AI • Generative AI

@@ -1,0 +1,32 @@
+LayoutLMv3 Multimodal Document Classifier Results
+
+Model:
+microsoft/layoutlmv3-base fine-tuned for sequence classification
+
+Input Modalities:
+- Document image
+- OCR words
+- Word-level bounding boxes
+
+Dataset:
+400 synthetic trade-finance documents
+- 100 Bill of Lading
+- 100 Commercial Invoice
+- 100 Letter of Credit
+- 100 Packing List
+
+Train/Test Split:
+80/20 stratified split
+
+Training:
+3 epochs
+GPU: NVIDIA RTX 5000 Ada Generation
+
+Results:
+Accuracy: 1.00
+
+Precision / Recall / F1:
+All four classes achieved 1.00 precision, recall, and F1.
+
+Saved Model:
+models/layoutlmv3-trade-doc-classifier/final

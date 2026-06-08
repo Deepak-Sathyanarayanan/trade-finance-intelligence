@@ -1,0 +1,24 @@
+Baseline OCR Text Classifier Results
+
+Model:
+TF-IDF + Logistic Regression
+
+Dataset:
+400 synthetic trade-finance documents
+- 100 Bill of Lading
+- 100 Commercial Invoice
+- 100 Letter of Credit
+- 100 Packing List
+
+Test Set:
+80 documents
+
+Accuracy:
+1.00
+
+Precision / Recall / F1:
+All classes achieved 1.00
+
+Notes:
+This is an initial clean synthetic baseline.
+Next step is multimodal classification using LayoutLMv3 with OCR tokens, bounding boxes, and document images.

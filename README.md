@@ -2,7 +2,7 @@
 
 ## Overview
 
-Trade Finance Intelligence Platform is a multimodal AI solution for understanding and processing trade-finance documents.
+Trade Finance Intelligence Platform is a multimodal AI system for understanding, classifying, extracting, and searching trade-finance documents.
 
 The platform combines:
 
@@ -13,7 +13,7 @@ The platform combines:
 * Semantic Search (RAG)
 * FastAPI Deployment
 
-The system supports common trade-finance documents:
+The system processes common trade-finance documents such as:
 
 * Commercial Invoices
 * Bills of Lading
@@ -93,7 +93,7 @@ Example Response:
 
 ---
 
-## Semantic Search (RAG)
+## Semantic Search API
 
 ![Semantic Search](docs/images/semantic_search_demo.png)
 
@@ -108,15 +108,30 @@ Example Query:
 
 ---
 
-## LayoutLMv3 Training Results
+## RAG Retrieval Example
 
-![Training](docs/images/layoutlmv3_training.png)
+![RAG Retrieval](docs/images/RAG_Terminal_Output.png)
 
-Results:
+Example semantic search query:
 
 ```text
-Accuracy: 1.00
+Find pharmaceutical supply invoices
 ```
+
+Example retrieval result:
+
+```text
+Rank 1
+Doc Type: commercial_invoice
+
+Rank 2
+Doc Type: commercial_invoice
+
+Rank 3
+Doc Type: commercial_invoice
+```
+
+The system generates dense embeddings using Sentence Transformers and performs semantic retrieval using ChromaDB.
 
 ---
 
@@ -150,19 +165,19 @@ Generated Assets:
 
 # Document Classification
 
-### Model
+## Model
 
 ```text
 microsoft/layoutlmv3-base
 ```
 
-### Inputs
+## Input Modalities
 
-* Document Image
+* Document Images
 * OCR Tokens
 * Bounding Boxes
 
-### Output
+## Output
 
 ```json
 {
@@ -175,20 +190,18 @@ microsoft/layoutlmv3-base
 
 # Entity Extraction
 
-Extracted Fields:
+The platform extracts key trade-finance fields including:
 
-```text
-Seller
-Buyer
-Invoice Number
-Amount
-Country
-Goods
-LC Number
-Container Number
-Port of Loading
-Port of Discharge
-```
+* Seller
+* Buyer
+* Invoice Number
+* Amount
+* Country
+* Goods Description
+* Letter of Credit Number
+* Container Number
+* Port of Loading
+* Port of Discharge
 
 Example:
 
@@ -206,15 +219,13 @@ Example:
 
 # Semantic Search (RAG)
 
-Technology Stack:
+## Technology Stack
 
-```text
-Sentence Transformers
-all-MiniLM-L6-v2
-ChromaDB
-```
+* Sentence Transformers
+* all-MiniLM-L6-v2
+* ChromaDB
 
-Example Queries:
+## Example Queries
 
 ```text
 Find pharmaceutical supply invoices
@@ -232,7 +243,7 @@ Find bills of lading containing industrial pumps
 
 # Model Performance
 
-## Baseline
+## Baseline Model
 
 TF-IDF + Logistic Regression
 
@@ -242,7 +253,7 @@ TF-IDF + Logistic Regression
 
 ---
 
-## Multimodal
+## Multimodal Model
 
 LayoutLMv3
 
@@ -285,6 +296,22 @@ Request:
 }
 ```
 
+Response:
+
+```json
+{
+  "classification": {
+    "doc_type": "commercial_invoice",
+    "confidence": 0.999
+  },
+  "entities": {
+    "seller": "...",
+    "buyer": "...",
+    "amount": "..."
+  }
+}
+```
+
 ---
 
 ## Semantic Search
@@ -301,6 +328,42 @@ Request:
   "n_results": 5
 }
 ```
+
+---
+
+# Repository Structure
+
+```text
+trade-finance-intelligence/
+│
+├── docs/
+│   └── images/
+│
+├── reports/
+│
+├── src/
+│   ├── api/
+│   ├── classification/
+│   ├── extraction/
+│   ├── ocr/
+│   ├── rag/
+│   └── data_generation/
+│
+├── requirements.txt
+└── README.md
+```
+
+The repository contains source code only.
+
+The following artifacts are intentionally excluded from source control because of size constraints:
+
+* Synthetic trade-finance dataset
+* OCR outputs
+* Layout JSON files
+* Trained LayoutLMv3 models
+* ChromaDB vector indexes
+
+All artifacts can be regenerated using the provided scripts.
 
 ---
 
@@ -353,7 +416,7 @@ http://localhost:8000/docs
 
 * LayoutLMv3 Token Classification for NER
 * LLM-based Compliance Summaries
-* Ollama / Llama3 Integration
+* Ollama / Llama 3 Integration
 * Docker Deployment
 * Kubernetes Deployment
 * AWS SageMaker Training
@@ -363,6 +426,6 @@ http://localhost:8000/docs
 
 # Author
 
-Deepak Sathyanarayanan
+**Deepak Sathyanarayanan**
 
-Trade Finance • Document AI • Multimodal ML • Generative AI
+Document AI • Multimodal AI • Trade Finance • Generative AI
